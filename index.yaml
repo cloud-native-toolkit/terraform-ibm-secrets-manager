@@ -1,0 +1,9 @@
+name: ibm-secrets-manager
+type: terraform
+description: Module to provision secrets-manager on ibm
+tags:
+  - tools
+  - devops
+versions: []
+cloudProvider: ibm
+id: github.com/cloud-native-toolkit/terraform-ibm-secrets-manager
