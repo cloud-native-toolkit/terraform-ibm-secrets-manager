@@ -1,11 +1,50 @@
 name: ibm-secrets-manager
 type: terraform
-description: Module to provision secrets-manager on ibm
+description: Module to provision an IBM Cloud Secrets Manager instance
 tags:
-  - tools
-  - devops
+  - ibm cloud
+  - certificate
+  - secrets manager
 versions:
   - platforms: []
-    dependencies: []
-    variables: []
+    providers:
+      - name: ibm
+        source: "ibm-cloud/ibm"
+    dependencies:
+    - id: resource_group
+      refs:
+        - source: github.com/cloud-native-toolkit/terraform-ibm-resource-group
+          version: ">= 1.0.0"
+    - id: kms_key
+      refs:
+        - source: github.com/cloud-native-toolkit/terraform-ibm-kms-key
+          version: ">= 0.0.0"
+      optional: true
+    variables:
+    - name: resource_group_name
+      moduleRef:
+        id: resource_group
+        output: name
+    - name: kms_id
+      moduleRef:
+        id: kms_key
+        output: kms_id
+    - name: kms_key_crn
+      moduleRef:
+        id: kms_key
+        output: crn
+    - name: kms_private_url
+      moduleRef:
+        id: kms_key
+        output: kms_private_url
+    - name: kms_public_url
+      moduleRef:
+        id: kms_key
+        output: kms_public_url
+    - name: region
+      scope: global
+    - name: name_prefix
+      scope: global
+    - name: ibmcloud_api_key
+      scope: global
 cloudProvider: ibm
