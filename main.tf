@@ -60,6 +60,13 @@ module "hpcs_auth" {
 }
 
 resource "ibm_resource_instance" "secrets-manager" {
+  count = var.provision ? 1 : 0
+  
+  depends_on = [
+    module.kms_auth,
+    module.hpcs_auth
+  ]
+
   name              = local.name
   service           = local.service
   plan              = local.plan
