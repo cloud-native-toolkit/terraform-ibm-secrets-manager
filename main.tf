@@ -65,6 +65,11 @@ resource "ibm_resource_instance" "secrets-manager" {
   plan              = local.plan
   location          = var.region
   resource_group_id = data.ibm_resource_group.resource_group.id
+  timeouts {
+    create = "30m"
+    update = "15m"
+    delete = "15m"
+  }
 }
 
 data "ibm_resource_instance" "secrets-manager" {

@@ -1,6 +1,11 @@
 output "id" {
-  description = "The Secrets Manager instance id"
+  description = "The Secrets Manager instance CRN id"
   value       = data.ibm_resource_instance.secrets-manager.id
+}
+
+output "guid" {
+  description = "The Secrets Manager instance guid"
+  value       = data.ibm_resource_instance.secrets-manager.guid
 }
 
 output "name" {
