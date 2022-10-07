@@ -122,6 +122,138 @@ versions:
           Flag indicating whether the instance to be deployed is to be a trial
           plan. 
         default: false
+    version: v1.0.2
+    outputs:
+      - name: id
+        description: The Secrets Manager instance CRN id
+      - name: guid
+        description: The Secrets Manager instance guid
+      - name: name
+        description: The Secrets Manager instance name
+      - name: crn
+        description: The crn of the Secrets Manager instance
+      - name: location
+        description: The Secrets Manager instance location
+      - name: service
+        description: The name of the service provisioned for the Secrets Manager instance
+      - name: plan
+        description: The plan of the service provisioned
+  - platforms: []
+    providers:
+      - name: ibm
+        source: ibm-cloud/ibm
+    dependencies:
+      - id: resource_group
+        refs:
+          - source: github.com/cloud-native-toolkit/terraform-ibm-resource-group
+            version: '>= 1.0.0'
+      - id: kms_key
+        refs:
+          - source: github.com/cloud-native-toolkit/terraform-ibm-kms-key
+            version: '>= 0.0.0'
+        optional: true
+    variables:
+      - name: resource_group_name
+        type: string
+        description: >-
+          The name of the IBM Cloud resource group where the Secrets Manager
+          instance will be/has been provisioned.
+        moduleRef:
+          id: resource_group
+          output: name
+      - name: region
+        description: The region where the Secrets Manager will be/has been provisioned.
+        type: string
+        scope: global
+      - name: ibmcloud_api_key
+        type: string
+        description: The IBM Cloud api key
+        sensitive: true
+        default: ''
+        scope: global
+      - name: provision
+        description: >-
+          Flag indicating that the instance should be provisioned. If false then
+          an existing instance will be looked up
+        type: bool
+        default: true
+      - name: kms_enabled
+        type: bool
+        description: >-
+          Flag indicating that kms encryption should be enabled for this
+          instance
+        default: false
+      - name: kms_id
+        type: string
+        description: The crn of the KMS instance that will be used to encrypt the instance.
+        default: 'null'
+        moduleRef:
+          id: kms_key
+          output: kms_id
+      - name: kms_public_url
+        type: string
+        description: >-
+          The public url of the KMS instance that will be used to encrypt the
+          instance.
+        default: 'null'
+        moduleRef:
+          id: kms_key
+          output: kms_public_url
+      - name: kms_private_url
+        type: string
+        description: >-
+          The private url of the KMS instance that will be used to encrypt the
+          instance.
+        default: 'null'
+        moduleRef:
+          id: kms_key
+          output: kms_private_url
+      - name: kms_private_endpoint
+        type: bool
+        description: Flag indicating the KMS private endpoint should be used
+        default: true
+      - name: kms_key_crn
+        type: string
+        description: The crn of the root key in the KMS
+        default: 'null'
+        moduleRef:
+          id: kms_key
+          output: crn
+      - name: name_prefix
+        type: string
+        description: >-
+          The name prefix for the Secrets Manager resource. If not provided will
+          default to resource group name.
+        default: ''
+        scope: global
+      - name: name
+        description: >-
+          Name of the Secrets Manager. If not provided will be generated as
+          $name_prefix-$label
+        type: string
+        default: ''
+      - name: label
+        description: Label used to build the Secrets Manager name if not provided.
+        type: string
+        default: sm
+      - name: private_endpoint
+        type: bool
+        description: >-
+          Flag indicating that the service should be access using private
+          endpoints
+        default: true
+      - name: create_auth
+        type: bool
+        description: >-
+          Flag indicating the service authorization should be created to allow
+          this service to access the KMS service
+        default: true
+      - name: trial
+        type: bool
+        description: >-
+          Flag indicating whether the instance to be deployed is to be a trial
+          plan. 
+        default: false
     version: v1.0.1
     outputs:
       - name: id
