@@ -17,32 +17,14 @@ variable "ibmcloud_api_key" {
 
 variable "provision" {
   description = "Flag indicating that the instance should be provisioned. If false then an existing instance will be looked up"
-  type = bool
-  default = true
+  type        = bool
+  default     = true
 }
 
 variable "kms_enabled" {
   type        = bool
   description = "Flag indicating that kms encryption should be enabled for this instance"
   default     = false
-}
-
-variable "kms_id" {
-  type        = string
-  description = "The crn of the KMS instance that will be used to encrypt the instance."
-  default     = null
-}
-
-variable "kms_public_url" {
-  type        = string
-  description = "The public url of the KMS instance that will be used to encrypt the instance."
-  default     = null
-}
-
-variable "kms_private_url" {
-  type        = string
-  description = "The private url of the KMS instance that will be used to encrypt the instance."
-  default     = null
 }
 
 variable "kms_private_endpoint" {
@@ -53,7 +35,7 @@ variable "kms_private_endpoint" {
 
 variable "kms_key_crn" {
   type        = string
-  description = "The crn of the root key in the KMS"
+  description = "The crn of the root key in the KMS to encrypt secret content"
   default     = null
 }
 
@@ -88,7 +70,7 @@ variable "create_auth" {
 }
 
 variable "trial" {
-  type = bool
+  type        = bool
   description = "Flag indicating whether the instance to be deployed is to be a trial plan. "
-  default = false
+  default     = false
 }

@@ -4,14 +4,8 @@ locals {
   service       = "secrets-manager"
   plan          = var.trial ? "trial" : "standard"
 
-  kms_info = jsonencode({
-    id = var.kms_id
-    url = var.kms_private_endpoint ? var.kms_private_url : var.kms_public_url
-  })
-
   kms_parameters = var.kms_enabled ? {
-    kms_info = local.kms_info
-    tek_id   = var.kms_key_crn
+    kms_key = var.kms_key_crn
   } : {}
 
   base_parameters = var.private_endpoint ? {
@@ -71,6 +65,7 @@ resource "ibm_resource_instance" "secrets-manager" {
   service           = local.service
   plan              = local.plan
   location          = var.region
+  parameters        = local.parameters
   resource_group_id = data.ibm_resource_group.resource_group.id
   timeouts {
     create = "30m"
