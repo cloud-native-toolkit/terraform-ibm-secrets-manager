@@ -25,22 +25,10 @@ versions:
       moduleRef:
         id: resource_group
         output: name
-    - name: kms_id
-      moduleRef:
-        id: kms_key
-        output: kms_id
     - name: kms_key_crn
       moduleRef:
         id: kms_key
         output: crn
-    - name: kms_private_url
-      moduleRef:
-        id: kms_key
-        output: kms_private_url
-    - name: kms_public_url
-      moduleRef:
-        id: kms_key
-        output: kms_public_url
     - name: region
       scope: global
     - name: name_prefix
