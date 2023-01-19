@@ -4,14 +4,8 @@ locals {
   service       = "secrets-manager"
   plan          = var.trial ? "trial" : "standard"
 
-  kms_info = jsonencode({
-    id = var.kms_id
-    url = var.kms_private_endpoint ? var.kms_private_url : var.kms_public_url
-  })
-
   kms_parameters = var.kms_enabled ? {
-    kms_info = local.kms_info
-    tek_id   = var.kms_key_crn
+    kms_key = var.kms_key_crn
   } : {}
 
   base_parameters = var.private_endpoint ? {
