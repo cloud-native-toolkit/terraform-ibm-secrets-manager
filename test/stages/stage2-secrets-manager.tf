@@ -10,5 +10,5 @@ module "secrets-manager" {
   kms_key_crn = module.kms_key.crn
   ibmcloud_api_key = var.ibmcloud_api_key
   name_prefix = var.name_prefix
-  trial = true
+  trial = false
 }
