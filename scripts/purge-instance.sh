@@ -22,13 +22,13 @@ else
 fi
 
 # Login to ibmcloud
-if [[ -z $APIKEY ]]; then
-    echo "ERROR: APIKEY not set. Please set environment variable prior to calling script."
+if [[ -z $IBMCLOUD_API_KEY ]]; then
+    echo "ERROR: IBMCLOUD_API_KEY environment variable not set. Please set environment variable prior to calling script."
     exit 1
 fi
 
 echo "Logging in to ibmcloud CLI"
-${DIR}ibmcloud login --apikey $APIKEY -q --no-region
+${DIR}ibmcloud login -q --no-region
 
 echo "Finding reclamation id for $INSTANCE_ID"
 RECLAMATION_ID=$(${DIR}ibmcloud resource reclamations --resource-instance-id $INSTANCE_ID --output json | ${DIR}jq -r '.[].id')

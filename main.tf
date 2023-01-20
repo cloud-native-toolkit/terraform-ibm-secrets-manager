@@ -129,7 +129,7 @@ resource "null_resource" "purge-sm" {
     command = "${path.module}/scripts/purge-instance.sh ${self.triggers.filename}"
 
     environment = {
-      APIKEY = self.triggers.apikey
+      IBMCLOUD_API_KEY = self.triggers.apikey
      }
   }
 }
