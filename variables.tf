@@ -27,12 +27,6 @@ variable "kms_enabled" {
   default     = false
 }
 
-variable "kms_private_endpoint" {
-  type        = bool
-  description = "Flag indicating the KMS private endpoint should be used"
-  default     = true
-}
-
 variable "kms_key_crn" {
   type        = string
   description = "The crn of the root key in the KMS to encrypt secret content"
@@ -72,5 +66,11 @@ variable "create_auth" {
 variable "trial" {
   type        = bool
   description = "Flag indicating whether the instance to be deployed is to be a trial plan. "
+  default     = false
+}
+
+variable "purge" {
+  type        = bool
+  description = "Flag indicating whether the instance should be purged from reclamation on destroy"
   default     = false
 }

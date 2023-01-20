@@ -3,6 +3,9 @@ locals {
   name          = lower(replace(var.name != "" ? var.name : "${local.prefix_name}-${var.label}", "_", "-"))
   service       = "secrets-manager"
   plan          = var.trial ? "trial" : "standard"
+  binary_dir    = "bin"
+  tmp_dir       = "tmp"
+  id_file       = "sm-id"
 
   kms_parameters = var.kms_enabled ? {
     kms_key = var.kms_key_crn
@@ -25,6 +28,12 @@ resource null_resource print_prefix {
   provisioner "local-exec" {
     command = "echo 'Name: ${local.name}'"
   }
+}
+
+module "clis" {
+  source = "github.com/cloud-native-toolkit/terraform-util-clis.git"
+
+  clis = ["ibmcloud","jq"]
 }
 
 data ibm_resource_group resource_group {
@@ -58,7 +67,8 @@ resource "ibm_resource_instance" "secrets-manager" {
   
   depends_on = [
     module.kms_auth,
-    module.hpcs_auth
+    module.hpcs_auth,
+    null_resource.purge-sm
   ]
 
   name              = local.name
@@ -81,4 +91,45 @@ data "ibm_resource_instance" "secrets-manager" {
   resource_group_id = data.ibm_resource_group.resource_group.id
   location          = var.region
   service           = local.service
+}
+
+resource "null_resource" "note-sm-id" {
+  count = var.purge ? 1 : 0
+  depends_on = [
+    ibm_resource_instance.secrets-manager,
+    null_resource.purge-sm
+  ]
+
+  triggers = {
+    id        = data.ibm_resource_instance.secrets-manager.guid
+    path      = "${path.cwd}/${local.tmp_dir}"
+    filename  = local.id_file
+  }
+
+  provisioner "local-exec" {
+    when = destroy
+    command = "${path.module}/scripts/write-id.sh ${self.triggers.id} ${self.triggers.path} ${self.triggers.filename}"
+  }
+}
+
+resource "null_resource" "purge-sm" {
+  count = var.purge ? 1 : 0
+
+  depends_on = [
+    module.clis
+  ]
+
+  triggers = {
+    filename = "${path.cwd}/${local.tmp_dir}/${local.id_file}"
+    apikey    = var.ibmcloud_api_key
+  }
+
+  provisioner "local-exec" {
+    when = destroy
+    command = "${path.module}/scripts/purge-instance.sh ${self.triggers.filename}"
+
+    environment = {
+      IBMCLOUD_API_KEY = self.triggers.apikey
+     }
+  }
 }
